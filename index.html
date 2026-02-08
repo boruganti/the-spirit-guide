@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Spirit Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-burgundy: #2d0a1f;
+            --rich-amber: #d4a574;
+            --warm-gold: #f4e4c1;
+            --dark-green: #1a3a2e;
+            --cream: #fdfbf7;
+            --accent-red: #8b2635;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, var(--deep-burgundy) 0%, #1a0d15 50%, var(--dark-green) 100%);
+            color: var(--cream);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 38, 53, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Menu Toggle Button */
+        .menu-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 200;
+            background: rgba(212, 165, 116, 0.9);
+            border: 2px solid var(--warm-gold);
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-icon span {
+            width: 100%;
+            height: 3px;
+            background: var(--deep-burgundy);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active .menu-icon span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .menu-toggle.active .menu-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active .menu-icon span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 85%;
+            max-width: 400px;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(45, 10, 31, 0.98) 0%, rgba(26, 58, 46, 0.98) 100%);
+            backdrop-filter: blur(20px);
+            border-left: 2px solid rgba(212, 165, 116, 0.3);
+            z-index: 150;
+            transition: right 0.4s ease;
+            overflow-y: auto;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .menu-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+            background: rgba(45, 10, 31, 0.5);
+        }
+
+        .menu-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--rich-amber);
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-subtitle {
+            color: var(--warm-gold);
+            font-size: 0.875rem;
+            font-style: italic;
+        }
+
+        .menu-cocktails {
+            padding: 1rem;
+        }
+
+        .menu-cocktail-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(45, 10, 31, 0.5);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-cocktail-item:active {
+            transform: scale(0.98);
+            background: rgba(139, 38, 53, 0.3);
+        }
+
+        .menu-cocktail-name {
+            font-family: 'Playfair Display', serif;
+            color: var(--rich-amber);
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-cocktail-type {
+            color: var(--warm-gold);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1.5rem 2rem;
+            background: linear-gradient(180deg, rgba(45, 10, 31, 0.9) 0%, transparent 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--rich-amber);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: var(--warm-gold);
+            font-style: italic;
+            letter-spacing: 0.1em;
+            opacity: 0.9;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            padding: 2rem 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quiz-intro {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .quiz-intro h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--rich-amber);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-intro p {
+            font-size: 1.125rem;
+            color: var(--warm-gold);
+            line-height: 1.6;
+        }
+
+        .quiz-question {
+            background: linear-gradient(135deg, rgba(45, 10, 31, 0.8) 0%, rgba(26, 58, 46, 0.8) 100%);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--warm-gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            background: rgba(45, 10, 31, 0.5);
+            border: 2px solid rgba(212, 165, 116, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1.125rem;
+            color: var(--cream);
+        }
+
+        .quiz-option:hover {
+            border-color: var(--rich-amber);
+            background: rgba(212, 165, 116, 0.2);
+        }
+
+        .quiz-option:active {
+            transform: scale(0.98);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--rich-amber);
+            background: rgba(212, 165, 116, 0.3);
+            box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+        }
+
+        .start-button, .next-button, .restart-button {
+            display: block;
+            margin: 2rem auto;
+            padding: 1rem 3rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, var(--rich-amber), var(--accent-red));
+            color: var(--deep-burgundy);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+            font-weight: 700;
+        }
+
+        .start-button:hover, .next-button:hover, .restart-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.5);
+        }
+
+        .start-button:active, .next-button:active, .restart-button:active {
+            transform: translateY(0);
+        }
+
+        .next-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .result-container {
+            padding: 2rem 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .result-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            color: var(--warm-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-message {
+            font-size: 1.125rem;
+            color: var(--cream);
+            font-style: italic;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .cocktails-grid {
+            padding: 2rem 1rem;
+            display: grid;
+            gap: 1.5rem;
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cocktail-card {
+            background: linear-gradient(135deg, rgba(45, 10, 31, 0.8) 0%, rgba(26, 58, 46, 0.8) 100%);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cocktail-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--rich-amber), var(--accent-red));
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .cocktail-card:active {
+            transform: scale(0.98);
+        }
+
+        .cocktail-card.expanded::before {
+            opacity: 0.3;
+        }
+
+        .cocktail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .cocktail-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--rich-amber);
+            margin-bottom: 0.25rem;
+        }
+
+        .cocktail-type {
+            font-size: 0.875rem;
+            color: var(--warm-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: var(--rich-amber);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .cocktail-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .cocktail-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .cocktail-card.expanded .cocktail-details {
+            max-height: 1000px;
+        }
+
+        .section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(212, 165, 116, 0.2);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--warm-gold);
+            margin-bottom: 0.75rem;
+        }
+
+        .ingredients-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ingredients-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+            color: var(--cream);
+        }
+
+        .ingredients-list li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: var(--rich-amber);
+        }
+
+        .instructions {
+            line-height: 1.8;
+            color: var(--cream);
+            font-size: 1rem;
+        }
+
+        .glass-type {
+            display: inline-block;
+            background: rgba(212, 165, 116, 0.2);
+            color: var(--rich-amber);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 1px solid rgba(212, 165, 116, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--warm-gold);
+            opacity: 0.7;
+            font-style: italic;
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            .cocktails-grid {
+                padding: 3rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Toggle Button -->
+    <div class="menu-toggle" id="menuToggle">
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <div class="menu-title">All Cocktails</div>
+            <div class="menu-subtitle">Tap to view any cocktail</div>
+        </div>
+        <div class="menu-cocktails" id="menuCocktails"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>The Spirit Guide</h1>
+            <p class="tagline">A curated collection of timeless cocktails</p>
+        </header>
+
+        <!-- Quiz Section -->
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-intro" id="quizIntro">
+                <h2>Find Your Perfect Cocktail</h2>
+                <p>Answer a few quick questions and we'll recommend the perfect drink for you</p>
+                <button class="start-button" id="startQuiz">Start Quiz</button>
+            </div>
+
+            <div id="quizQuestions" class="hidden"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="result-container hidden" id="resultContainer">
+            <div class="result-header">
+                <h2>Your Perfect Match</h2>
+            </div>
+            <div class="result-message" id="resultMessage"></div>
+            <div id="recommendedCocktail"></div>
+            <button class="restart-button" id="restartQuiz">Take Quiz Again</button>
+        </div>
+
+        <!-- All Cocktails Grid -->
+        <div class="cocktails-grid hidden" id="cocktailsGrid"></div>
+
+        <footer>
+            Crafted with care • Sip responsibly
+        </footer>
+    </div>
+
+    <script>
+        const cocktails = [
+            {
+                name: "Margarita",
+                type: "Tequila",
+                glass: "Margarita glass",
+                tags: ["refreshing", "citrus", "sweet", "strong"],
+                ingredients: [
+                    "2 oz Tequila",
+                    "1 oz Lime juice",
+                    "1 oz Cointreau or Triple Sec",
+                    "Salt for rim",
+                    "Lime wheel for garnish"
+                ],
+                instructions: "Rim the glass with salt. Add tequila, lime juice, and Cointreau to a shaker with ice. Shake well and strain into the prepared glass over fresh ice. Garnish with a lime wheel."
+            },
+            {
+                name: "Old Fashioned",
+                type: "Whiskey",
+                glass: "Rocks glass",
+                tags: ["classic", "strong", "bitter", "complex"],
+                ingredients: [
+                    "2 oz Bourbon or Rye whiskey",
+                    "1 Sugar cube",
+                    "2-3 dashes Angostura bitters",
+                    "Orange peel",
+                    "Luxardo cherry"
+                ],
+                instructions: "Muddle sugar cube with bitters and a splash of water in a rocks glass. Add whiskey and ice, stir until well-chilled. Express orange peel over the drink and drop it in. Garnish with a cherry."
+            },
+            {
+                name: "Mojito",
+                type: "Rum",
+                glass: "Highball glass",
+                tags: ["refreshing", "minty", "sweet", "light"],
+                ingredients: [
+                    "2 oz White rum",
+                    "1 oz Lime juice",
+                    "2 tsp Sugar",
+                    "6-8 Mint leaves",
+                    "Soda water",
+                    "Mint sprig and lime for garnish"
+                ],
+                instructions: "Muddle mint leaves with sugar and lime juice in a glass. Add rum and fill with ice. Top with soda water and stir gently. Garnish with mint sprig and lime wheel."
+            },
+            {
+                name: "Martini",
+                type: "Gin",
+                glass: "Martini glass",
+                tags: ["classic", "strong", "sophisticated", "dry"],
+                ingredients: [
+                    "2.5 oz Gin",
+                    "0.5 oz Dry vermouth",
+                    "Lemon twist or olives"
+                ],
+                instructions: "Add gin and vermouth to a mixing glass with ice. Stir until well-chilled. Strain into a chilled martini glass. Garnish with a lemon twist or olives."
+            },
+            {
+                name: "Manhattan",
+                type: "Whiskey",
+                glass: "Coupe glass",
+                tags: ["classic", "strong", "sweet", "complex"],
+                ingredients: [
+                    "2 oz Rye whiskey",
+                    "1 oz Sweet vermouth",
+                    "2 dashes Angostura bitters",
+                    "Luxardo cherry"
+                ],
+                instructions: "Add whiskey, vermouth, and bitters to a mixing glass with ice. Stir until well-chilled. Strain into a chilled coupe glass. Garnish with a cherry."
+            },
+            {
+                name: "Daiquiri",
+                type: "Rum",
+                glass: "Coupe glass",
+                tags: ["refreshing", "citrus", "sweet", "light"],
+                ingredients: [
+                    "2 oz White rum",
+                    "1 oz Lime juice",
+                    "0.75 oz Simple syrup",
+                    "Lime wheel for garnish"
+                ],
+                instructions: "Add rum, lime juice, and simple syrup to a shaker with ice. Shake vigorously until well-chilled. Strain into a chilled coupe glass. Garnish with a lime wheel."
+            },
+            {
+                name: "Negroni",
+                type: "Gin",
+                glass: "Rocks glass",
+                tags: ["bitter", "strong", "complex", "aperitif"],
+                ingredients: [
+                    "1 oz Gin",
+                    "1 oz Campari",
+                    "1 oz Sweet vermouth",
+                    "Orange peel"
+                ],
+                instructions: "Add gin, Campari, and vermouth to a mixing glass with ice. Stir until well-chilled. Strain into a rocks glass over fresh ice. Express orange peel over the drink and drop it in."
+            },
+            {
+                name: "Whiskey Sour",
+                type: "Whiskey",
+                glass: "Rocks glass",
+                tags: ["citrus", "sweet", "refreshing", "classic"],
+                ingredients: [
+                    "2 oz Bourbon",
+                    "0.75 oz Lemon juice",
+                    "0.5 oz Simple syrup",
+                    "1 Egg white (optional)",
+                    "Lemon wheel and cherry"
+                ],
+                instructions: "Add bourbon, lemon juice, simple syrup, and egg white (if using) to a shaker. Dry shake without ice for 15 seconds. Add ice and shake again. Strain into a rocks glass over fresh ice. Garnish with lemon and cherry."
+            },
+            {
+                name: "Cosmopolitan",
+                type: "Vodka",
+                glass: "Martini glass",
+                tags: ["sweet", "citrus", "sophisticated", "fruity"],
+                ingredients: [
+                    "1.5 oz Vodka",
+                    "1 oz Cointreau",
+                    "0.5 oz Lime juice",
+                    "0.25 oz Cranberry juice",
+                    "Lime wheel or orange peel"
+                ],
+                instructions: "Add vodka, Cointreau, lime juice, and cranberry juice to a shaker with ice. Shake well and strain into a chilled martini glass. Garnish with lime or orange peel."
+            },
+            {
+                name: "Piña Colada",
+                type: "Rum",
+                glass: "Hurricane glass",
+                tags: ["sweet", "tropical", "creamy", "fruity"],
+                ingredients: [
+                    "2 oz White rum",
+                    "1.5 oz Cream of coconut",
+                    "1.5 oz Pineapple juice",
+                    "Pineapple wedge and cherry"
+                ],
+                instructions: "Add rum, cream of coconut, and pineapple juice to a blender with ice. Blend until smooth. Pour into a hurricane glass. Garnish with pineapple wedge and cherry."
+            },
+            {
+                name: "Mai Tai",
+                type: "Rum",
+                glass: "Rocks glass",
+                tags: ["tropical", "sweet", "complex", "fruity"],
+                ingredients: [
+                    "1.5 oz White rum",
+                    "0.5 oz Dark rum",
+                    "0.75 oz Orange curaçao",
+                    "0.75 oz Lime juice",
+                    "0.5 oz Orgeat syrup",
+                    "Mint sprig and lime"
+                ],
+                instructions: "Add white rum, curaçao, lime juice, and orgeat to a shaker with ice. Shake well and strain into a rocks glass filled with crushed ice. Float dark rum on top. Garnish with mint and lime."
+            },
+            {
+                name: "Aperol Spritz",
+                type: "Aperitif",
+                glass: "Wine glass",
+                tags: ["light", "bitter", "refreshing", "aperitif"],
+                ingredients: [
+                    "3 oz Prosecco",
+                    "2 oz Aperol",
+                    "1 oz Soda water",
+                    "Orange slice"
+                ],
+                instructions: "Fill a wine glass with ice. Add Prosecco and Aperol, then top with soda water. Stir gently. Garnish with an orange slice."
+            },
+            {
+                name: "Espresso Martini",
+                type: "Vodka",
+                glass: "Martini glass",
+                tags: ["strong", "sweet", "energizing", "sophisticated"],
+                ingredients: [
+                    "2 oz Vodka",
+                    "1 oz Coffee liqueur",
+                    "1 oz Fresh espresso",
+                    "0.5 oz Simple syrup",
+                    "3 Coffee beans"
+                ],
+                instructions: "Add vodka, coffee liqueur, espresso, and simple syrup to a shaker with ice. Shake vigorously until well-chilled and frothy. Strain into a chilled martini glass. Garnish with three coffee beans."
+            },
+            {
+                name: "Moscow Mule",
+                type: "Vodka",
+                glass: "Copper mug",
+                tags: ["refreshing", "spicy", "citrus", "light"],
+                ingredients: [
+                    "2 oz Vodka",
+                    "0.5 oz Lime juice",
+                    "4 oz Ginger beer",
+                    "Lime wheel and mint"
+                ],
+                instructions: "Fill a copper mug with ice. Add vodka and lime juice. Top with ginger beer and stir gently. Garnish with lime wheel and mint sprig."
+            },
+            {
+                name: "Bloody Mary",
+                type: "Vodka",
+                glass: "Highball glass",
+                tags: ["savory", "spicy", "brunch", "complex"],
+                ingredients: [
+                    "1.5 oz Vodka",
+                    "3 oz Tomato juice",
+                    "0.5 oz Lemon juice",
+                    "2 dashes Worcestershire sauce",
+                    "2 dashes Hot sauce",
+                    "Pinch of salt and pepper",
+                    "Celery, lemon, and olives"
+                ],
+                instructions: "Add all ingredients to a shaker with ice. Roll gently between shakers (don't shake hard). Strain into a highball glass over fresh ice. Garnish elaborately with celery, lemon, olives, and other garnishes."
+            }
+        ];
+
+        const quizQuestions = [
+            {
+                question: "What's your vibe right now?",
+                options: [
+                    { text: "Sophisticated & Elegant", tags: ["classic", "sophisticated"] },
+                    { text: "Fun & Tropical", tags: ["tropical", "fruity"] },
+                    { text: "Refreshing & Light", tags: ["refreshing", "light"] },
+                    { text: "Bold & Intense", tags: ["strong", "complex"] }
+                ]
+            },
+            {
+                question: "How adventurous is your palate?",
+                options: [
+                    { text: "Keep it classic", tags: ["classic"] },
+                    { text: "Sweet is my weakness", tags: ["sweet", "fruity"] },
+                    { text: "I love unique flavors", tags: ["bitter", "complex"] },
+                    { text: "Light & easy going", tags: ["light", "refreshing"] }
+                ]
+            },
+            {
+                question: "What's the occasion?",
+                options: [
+                    { text: "Relaxing evening at home", tags: ["classic", "strong"] },
+                    { text: "Brunch with friends", tags: ["brunch", "light"] },
+                    { text: "Party time!", tags: ["sweet", "fruity"] },
+                    { text: "Unwinding after work", tags: ["refreshing", "aperitif"] }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let userTags = [];
+
+        // Menu functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const sideMenu = document.getElementById('sideMenu');
+        
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            sideMenu.classList.toggle('open');
+        });
+
+        // Populate side menu
+        function populateSideMenu() {
+            const menuCocktails = document.getElementById('menuCocktails');
+            cocktails.forEach(cocktail => {
+                const item = document.createElement('div');
+                item.className = 'menu-cocktail-item';
+                item.innerHTML = `
+                    <div class="menu-cocktail-name">${cocktail.name}</div>
+                    <div class="menu-cocktail-type">${cocktail.type}</div>
+                `;
+                item.addEventListener('click', () => {
+                    showCocktailDetail(cocktail);
+                    sideMenu.classList.remove('open');
+                    menuToggle.classList.remove('active');
+                });
+                menuCocktails.appendChild(item);
+            });
+        }
+
+        function showCocktailDetail(cocktail) {
+            const resultContainer = document.getElementById('resultContainer');
+            const quizContainer = document.getElementById('quizContainer');
+            const cocktailsGrid = document.getElementById('cocktailsGrid');
+            
+            quizContainer.classList.add('hidden');
+            cocktailsGrid.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            
+            document.getElementById('resultMessage').textContent = '';
+            document.getElementById('recommendedCocktail').innerHTML = '';
+            
+            const card = createCocktailCard(cocktail, 0);
+            card.classList.add('expanded');
+            document.getElementById('recommendedCocktail').appendChild(card);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Quiz functionality
+        document.getElementById('startQuiz').addEventListener('click', startQuiz);
+        document.getElementById('restartQuiz').addEventListener('click', restartQuiz);
+
+        function startQuiz() {
+            currentQuestion = 0;
+            userTags = [];
+            document.getElementById('quizIntro').classList.add('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionsContainer = document.getElementById('quizQuestions');
+            questionsContainer.classList.remove('hidden');
+            
+            const question = quizQuestions[currentQuestion];
+            questionsContainer.innerHTML = `
+                <div class="quiz-question">
+                    <div class="question-text">${question.question}</div>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <button class="next-button" id="nextButton" disabled>Next</button>
+                </div>
+            `;
+
+            const optionsContainer = document.getElementById('quizOptions');
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'quiz-option';
+                optionEl.textContent = option.text;
+                optionEl.addEventListener('click', () => selectOption(option, optionEl));
+                optionsContainer.appendChild(optionEl);
+            });
+        }
+
+        function selectOption(option, element) {
+            // Remove previous selections
+            document.querySelectorAll('.quiz-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            
+            // Store the selected tags
+            const question = quizQuestions[currentQuestion];
+            userTags = userTags.filter(tag => !question.options.some(opt => opt.tags.includes(tag)));
+            userTags.push(...option.tags);
+            
+            document.getElementById('nextButton').disabled = false;
+            
+            const nextButton = document.getElementById('nextButton');
+            nextButton.onclick = () => {
+                currentQuestion++;
+                if (currentQuestion < quizQuestions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            };
+        }
+
+        function showResults() {
+            // Calculate best match
+            let bestMatch = null;
+            let highestScore = 0;
+
+            cocktails.forEach(cocktail => {
+                const score = cocktail.tags.filter(tag => userTags.includes(tag)).length;
+                if (score > highestScore) {
+                    highestScore = score;
+                    bestMatch = cocktail;
+                }
+            });
+
+            // If no good match, pick a random popular one
+            if (!bestMatch || highestScore === 0) {
+                const popularCocktails = ['Margarita', 'Mojito', 'Old Fashioned'];
+                const randomName = popularCocktails[Math.floor(Math.random() * popularCocktails.length)];
+                bestMatch = cocktails.find(c => c.name === randomName);
+            }
+
+            document.getElementById('quizContainer').classList.add('hidden');
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.classList.remove('hidden');
+
+            const messages = [
+                "Based on your answers, we think you'll love this:",
+                "Your perfect cocktail match:",
+                "We've found the ideal drink for you:",
+                "This one's calling your name:"
+            ];
+            
+            document.getElementById('resultMessage').textContent = messages[Math.floor(Math.random() * messages.length)];
+            
+            const card = createCocktailCard(bestMatch, 0);
+            card.classList.add('expanded');
+            document.getElementById('recommendedCocktail').innerHTML = '';
+            document.getElementById('recommendedCocktail').appendChild(card);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartQuiz() {
+            document.getElementById('resultContainer').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+            document.getElementById('quizIntro').classList.remove('hidden');
+            document.getElementById('quizQuestions').classList.add('hidden');
+            currentQuestion = 0;
+            userTags = [];
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function createCocktailCard(cocktail, index) {
+            const card = document.createElement('div');
+            card.className = 'cocktail-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            card.innerHTML = `
+                <div class="cocktail-header">
+                    <div>
+                        <div class="cocktail-name">${cocktail.name}</div>
+                        <div class="cocktail-type">${cocktail.type}</div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="cocktail-details">
+                    <div class="section">
+                        <div class="glass-type">${cocktail.glass}</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Ingredients</div>
+                        <ul class="ingredients-list">
+                            ${cocktail.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Instructions</div>
+                        <div class="instructions">${cocktail.instructions}</div>
+                    </div>
+                </div>
+            `;
+
+            card.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+
+            return card;
+        }
+
+        // Initialize
+        populateSideMenu();
+    </script>
+</body>
+</html>
