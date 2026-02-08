@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Spirit Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-burgundy: #2d0a1f;
+            --rich-amber: #d4a574;
+            --warm-gold: #f4e4c1;
+            --dark-green: #1a3a2e;
+            --cream: #fdfbf7;
+            --accent-red: #8b2635;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, var(--deep-burgundy) 0%, #1a0d15 50%, var(--dark-green) 100%);
+            color: var(--cream);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 38, 53, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1.5rem 2rem;
+            background: linear-gradient(180deg, rgba(45, 10, 31, 0.9) 0%, transparent 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--rich-amber);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: var(--warm-gold);
+            font-style: italic;
+            letter-spacing: 0.1em;
+            opacity: 0.9;
+        }
+
+        .cocktails-grid {
+            padding: 2rem 1rem;
+            display: grid;
+            gap: 1.5rem;
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cocktail-card {
+            background: linear-gradient(135deg, rgba(45, 10, 31, 0.8) 0%, rgba(26, 58, 46, 0.8) 100%);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cocktail-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--rich-amber), var(--accent-red));
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .cocktail-card:active {
+            transform: scale(0.98);
+        }
+
+        .cocktail-card.expanded::before {
+            opacity: 0.3;
+        }
+
+        .cocktail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .cocktail-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--rich-amber);
+            margin-bottom: 0.25rem;
+        }
+
+        .cocktail-type {
+            font-size: 0.875rem;
+            color: var(--warm-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: var(--rich-amber);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .cocktail-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .cocktail-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .cocktail-card.expanded .cocktail-details {
+            max-height: 1000px;
+        }
+
+        .section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(212, 165, 116, 0.2);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--warm-gold);
+            margin-bottom: 0.75rem;
+        }
+
+        .ingredients-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ingredients-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+            color: var(--cream);
+        }
+
+        .ingredients-list li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: var(--rich-amber);
+        }
+
+        .instructions {
+            line-height: 1.8;
+            color: var(--cream);
+            font-size: 1rem;
+        }
+
+        .glass-type {
+            display: inline-block;
+            background: rgba(212, 165, 116, 0.2);
+            color: var(--rich-amber);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 1px solid rgba(212, 165, 116, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--warm-gold);
+            opacity: 0.7;
+            font-style: italic;
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            .cocktails-grid {
+                padding: 3rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>The Spirit Guide</h1>
+            <p class="tagline">A curated collection of timeless cocktails</p>
+        </header>
+
+        <div class="cocktails-grid" id="cocktailsGrid"></div>
+
+        <footer>
+            Crafted with care • Sip responsibly
+        </footer>
+    </div>
+
+    <script>
+        const cocktails = [
+            {
+                name: "Margarita",
+                type: "Tequila",
+                glass: "Margarita glass",
+                ingredients: [
+                    "2 oz Tequila",
+                    "1 oz Lime juice",
+                    "1 oz Cointreau or Triple Sec",
+                    "Salt for rim",
+                    "Lime wheel for garnish"
+                ],
+                instructions: "Rim the glass with salt. Add tequila, lime juice, and Cointreau to a shaker with ice. Shake well and strain into the prepared glass over fresh ice. Garnish with a lime wheel."
+            },
+            {
+                name: "Old Fashioned",
+                type: "Whiskey",
+                glass: "Rocks glass",
+                ingredients: [
+                    "2 oz Bourbon or Rye whiskey",
+                    "1 Sugar cube",
+                    "2-3 dashes Angostura bitters",
+                    "Orange peel",
+                    "Luxardo cherry"
+                ],
+                instructions: "Muddle sugar cube with bitters and a splash of water in a rocks glass. Add whiskey and ice, stir until well-chilled. Express orange peel over the drink and drop it in. Garnish with a cherry."
+            },
+            {
+                name: "Mojito",
+                type: "Rum",
+                glass: "Highball glass",
+                ingredients: [
+                    "2 oz White rum",
+                    "1 oz Lime juice",
+                    "2 tsp Sugar",
+                    "6-8 Mint leaves",
+                    "Soda water",
+                    "Mint sprig and lime for garnish"
+                ],
+                instructions: "Muddle mint leaves with sugar and lime juice in a glass. Add rum and fill with ice. Top with soda water and stir gently. Garnish with mint sprig and lime wheel."
+            },
+            {
+                name: "Martini",
+                type: "Gin",
+                glass: "Martini glass",
+                ingredients: [
+                    "2.5 oz Gin",
+                    "0.5 oz Dry vermouth",
+                    "Lemon twist or olives"
+                ],
+                instructions: "Add gin and vermouth to a mixing glass with ice. Stir until well-chilled. Strain into a chilled martini glass. Garnish with a lemon twist or olives."
+            },
+            {
+                name: "Manhattan",
+                type: "Whiskey",
+                glass: "Coupe glass",
+                ingredients: [
+                    "2 oz Rye whiskey",
+                    "1 oz Sweet vermouth",
+                    "2 dashes Angostura bitters",
+                    "Luxardo cherry"
+                ],
+                instructions: "Add whiskey, vermouth, and bitters to a mixing glass with ice. Stir until well-chilled. Strain into a chilled coupe glass. Garnish with a cherry."
+            },
+            {
+                name: "Daiquiri",
+                type: "Rum",
+                glass: "Coupe glass",
+                ingredients: [
+                    "2 oz White rum",
+                    "1 oz Lime juice",
+                    "0.75 oz Simple syrup",
+                    "Lime wheel for garnish"
+                ],
+                instructions: "Add rum, lime juice, and simple syrup to a shaker with ice. Shake vigorously until well-chilled. Strain into a chilled coupe glass. Garnish with a lime wheel."
+            },
+            {
+                name: "Negroni",
+                type: "Gin",
+                glass: "Rocks glass",
+                ingredients: [
+                    "1 oz Gin",
+                    "1 oz Campari",
+                    "1 oz Sweet vermouth",
+                    "Orange peel"
+                ],
+                instructions: "Add gin, Campari, and vermouth to a mixing glass with ice. Stir until well-chilled. Strain into a rocks glass over fresh ice. Express orange peel over the drink and drop it in."
+            },
+            {
+                name: "Whiskey Sour",
+                type: "Whiskey",
+                glass: "Rocks glass",
+                ingredients: [
+                    "2 oz Bourbon",
+                    "0.75 oz Lemon juice",
+                    "0.5 oz Simple syrup",
+                    "1 Egg white (optional)",
+                    "Lemon wheel and cherry"
+                ],
+                instructions: "Add bourbon, lemon juice, simple syrup, and egg white (if using) to a shaker. Dry shake without ice for 15 seconds. Add ice and shake again. Strain into a rocks glass over fresh ice. Garnish with lemon and cherry."
+            },
+            {
+                name: "Cosmopolitan",
+                type: "Vodka",
+                glass: "Martini glass",
+                ingredients: [
+                    "1.5 oz Vodka",
+                    "1 oz Cointreau",
+                    "0.5 oz Lime juice",
+                    "0.25 oz Cranberry juice",
+                    "Lime wheel or orange peel"
+                ],
+                instructions: "Add vodka, Cointreau, lime juice, and cranberry juice to a shaker with ice. Shake well and strain into a chilled martini glass. Garnish with lime or orange peel."
+            },
+            {
+                name: "Piña Colada",
+                type: "Rum",
+                glass: "Hurricane glass",
+                ingredients: [
+                    "2 oz White rum",
+                    "1.5 oz Cream of coconut",
+                    "1.5 oz Pineapple juice",
+                    "Pineapple wedge and cherry"
+                ],
+                instructions: "Add rum, cream of coconut, and pineapple juice to a blender with ice. Blend until smooth. Pour into a hurricane glass. Garnish with pineapple wedge and cherry."
+            },
+            {
+                name: "Mai Tai",
+                type: "Rum",
+                glass: "Rocks glass",
+                ingredients: [
+                    "1.5 oz White rum",
+                    "0.5 oz Dark rum",
+                    "0.75 oz Orange curaçao",
+                    "0.75 oz Lime juice",
+                    "0.5 oz Orgeat syrup",
+                    "Mint sprig and lime"
+                ],
+                instructions: "Add white rum, curaçao, lime juice, and orgeat to a shaker with ice. Shake well and strain into a rocks glass filled with crushed ice. Float dark rum on top. Garnish with mint and lime."
+            },
+            {
+                name: "Aperol Spritz",
+                type: "Aperitif",
+                glass: "Wine glass",
+                ingredients: [
+                    "3 oz Prosecco",
+                    "2 oz Aperol",
+                    "1 oz Soda water",
+                    "Orange slice"
+                ],
+                instructions: "Fill a wine glass with ice. Add Prosecco and Aperol, then top with soda water. Stir gently. Garnish with an orange slice."
+            },
+            {
+                name: "Espresso Martini",
+                type: "Vodka",
+                glass: "Martini glass",
+                ingredients: [
+                    "2 oz Vodka",
+                    "1 oz Coffee liqueur",
+                    "1 oz Fresh espresso",
+                    "0.5 oz Simple syrup",
+                    "3 Coffee beans"
+                ],
+                instructions: "Add vodka, coffee liqueur, espresso, and simple syrup to a shaker with ice. Shake vigorously until well-chilled and frothy. Strain into a chilled martini glass. Garnish with three coffee beans."
+            },
+            {
+                name: "Moscow Mule",
+                type: "Vodka",
+                glass: "Copper mug",
+                ingredients: [
+                    "2 oz Vodka",
+                    "0.5 oz Lime juice",
+                    "4 oz Ginger beer",
+                    "Lime wheel and mint"
+                ],
+                instructions: "Fill a copper mug with ice. Add vodka and lime juice. Top with ginger beer and stir gently. Garnish with lime wheel and mint sprig."
+            },
+            {
+                name: "Bloody Mary",
+                type: "Vodka",
+                glass: "Highball glass",
+                ingredients: [
+                    "1.5 oz Vodka",
+                    "3 oz Tomato juice",
+                    "0.5 oz Lemon juice",
+                    "2 dashes Worcestershire sauce",
+                    "2 dashes Hot sauce",
+                    "Pinch of salt and pepper",
+                    "Celery, lemon, and olives"
+                ],
+                instructions: "Add all ingredients to a shaker with ice. Roll gently between shakers (don't shake hard). Strain into a highball glass over fresh ice. Garnish elaborately with celery, lemon, olives, and other garnishes."
+            }
+        ];
+
+        function createCocktailCard(cocktail, index) {
+            const card = document.createElement('div');
+            card.className = 'cocktail-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            card.innerHTML = `
+                <div class="cocktail-header">
+                    <div>
+                        <div class="cocktail-name">${cocktail.name}</div>
+                        <div class="cocktail-type">${cocktail.type}</div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="cocktail-details">
+                    <div class="section">
+                        <div class="glass-type">${cocktail.glass}</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Ingredients</div>
+                        <ul class="ingredients-list">
+                            ${cocktail.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Instructions</div>
+                        <div class="instructions">${cocktail.instructions}</div>
+                    </div>
+                </div>
+            `;
+
+            card.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+
+            return card;
+        }
+
+        const grid = document.getElementById('cocktailsGrid');
+        cocktails.forEach((cocktail, index) => {
+            grid.appendChild(createCocktailCard(cocktail, index));
+        });
+    </script>
+</body>
+</html>
